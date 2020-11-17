@@ -90,7 +90,7 @@ public class TransactionActivity extends AppCompatActivity {
     }
 
     private void doTransaction(AstConfirmation astConfirmation) {
-        application.getSdk().doTransaction(AstDeviceType.VIRTUALDEVICE, astConfirmation, "Test Transaction");
+        application.getSdk().doTransaction(AstDeviceType.VIRTUALDEVICE, astConfirmation, application.transactionText);
         timer.cancel();
         time_tv.setText("-");
     }
