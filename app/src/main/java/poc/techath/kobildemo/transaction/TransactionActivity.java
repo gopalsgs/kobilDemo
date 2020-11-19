@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.kobil.midapp.ast.api.enums.AstConfirmation;
 import com.kobil.midapp.ast.api.enums.AstConfirmationType;
@@ -27,6 +28,10 @@ public class TransactionActivity extends AppCompatActivity {
     private TextView time_tv;
     private int timeOut = 0;
     private Timer timer;
+
+    public interface TransactionActivityCallBack {
+        void onTransactionEnd(String message);
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -61,6 +66,13 @@ public class TransactionActivity extends AppCompatActivity {
             }
         });
 
+        application.setTransactionActivityCallBack(new TransactionActivityCallBack(){
+            @Override
+            public void onTransactionEnd(String message) {
+                Toast.makeText(application, message, Toast.LENGTH_SHORT).show();
+                finish();
+            }
+        });
 
         setTimer();
     }
@@ -97,8 +109,7 @@ public class TransactionActivity extends AppCompatActivity {
 
     @Override
     public void onBackPressed() {
-        application.getSdk().doTransaction(astDeviceType, AstConfirmation.CANCEL, "Test Transaction");
-        super.onBackPressed();
+        doTransaction(AstConfirmation.CANCEL);
     }
 
 }

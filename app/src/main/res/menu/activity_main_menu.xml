@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <item
+        android:id="@+id/change_pin"
+        android:title="Change Pin" />
+    <item
+        android:id="@+id/delete_user"
+        android:title="Delete User" />
+    <item
+        android:id="@+id/otp"
+        android:title="Generate Otp" />
+    <item
+        android:id="@+id/logout"
+        android:title="Logout" />
+
+</menu>

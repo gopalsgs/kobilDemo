@@ -51,6 +51,7 @@ public class MyApplication extends Application implements AstSdkListener {
 
     public  int timeout = 0;
     public  String transactionText = "";
+    private TransactionActivity.TransactionActivityCallBack transactionActivityCallBack;
 
     public AstSdk getSdk() {
         return sdk;
@@ -67,7 +68,6 @@ public class MyApplication extends Application implements AstSdkListener {
     @Override
     public void onCreate() {
         super.onCreate();
-        initSdk();
     }
 
     public void initSdk() {
@@ -144,6 +144,9 @@ public class MyApplication extends Application implements AstSdkListener {
         // Called only when the app is activated and not loggedIn
         this.astDeviceType = astDeviceType;
         sdk.doCheckServerReachable();
+
+//        sdk.doDeactivate(PrefStorage.readString(getApplicationContext(), "userName", ""));
+
     }
 
     @Override
@@ -334,7 +337,16 @@ public class MyApplication extends Application implements AstSdkListener {
 
     @Override
     public void onTransactionEnd(AstDeviceType astDeviceType, AstStatus astStatus) {
-        Log.e(TAG, "onTransactionEnd: "+ astStatus.toString() );
+        final String status = astStatus.toString();
+        Log.e(TAG, "onTransactionEnd: "+ status);
+        if(transactionActivityCallBack != null){
+            handler.post(new Runnable() {
+                @Override
+                public void run() {
+                    transactionActivityCallBack.onTransactionEnd(status);
+                }
+            });
+        }
     }
 
     @Override
@@ -501,8 +513,13 @@ public class MyApplication extends Application implements AstSdkListener {
         Log.e(TAG, "appExit: " );
 
         if(reInitSdk){
-            initSdk();
-            reInitSdk = false;
+            handler.post(new Runnable() {
+                @Override
+                public void run() {
+                    initSdk();
+                    reInitSdk = false;
+                }
+            });
         }
 
     }
@@ -551,4 +568,18 @@ public class MyApplication extends Application implements AstSdkListener {
         sdk.exit(0);
     }
 
+
+    @Override
+    public void onTerminate() {
+        Log.e(TAG, "onTerminate: ");
+        isOfflineUserSet = false;
+        isLoginPageSet = false;
+        isOffline = false;
+        sdk.exit(8000);
+        super.onTerminate();
+    }
+
+    public void setTransactionActivityCallBack(TransactionActivity.TransactionActivityCallBack transactionActivityCallBack) {
+        this.transactionActivityCallBack = transactionActivityCallBack;
+    }
 }

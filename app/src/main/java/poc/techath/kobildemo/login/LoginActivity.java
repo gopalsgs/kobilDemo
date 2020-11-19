@@ -36,10 +36,11 @@ public class LoginActivity extends AppCompatActivity {
         submit_btn = findViewById(R.id.submit_btn);
         application = (MyApplication) getApplication();
 
+        String userName = PrefStorage.readString(getApplicationContext(), "userName", "");
+        userName_et.setText(userName);
+
         if (application.isOffline) {
             userName_et.setEnabled(false);
-            String userName = PrefStorage.readString(getApplicationContext(), "userName", "");
-            userName_et.setText(userName);
         }
 
         submit_btn.setOnClickListener(new View.OnClickListener() {
